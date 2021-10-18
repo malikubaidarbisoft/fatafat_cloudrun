@@ -38,9 +38,13 @@ List of Variables created and used in scritps are:
 | PROJECT_ID                	| Project Id in which we well create this deployment        	|
 | REGION                      	| Region in which resources like bucket, sql instance will be created        	|
 | SQL_INSTANCE_ID           	| Within in Project unique sql instance name, which haven't beeen used before        	|
-| PASSWORD                      | SQL Instance user password        	|
+| DB_HOST                       | SQL Instance user password        	|
+| DB_NAME                       | SQL Instance DB    name 	|
+| DB_USER                       | SQL Instance user name     	|
+| POSTGRES_DB                   | SQL Instance postgres  DB     	|
+| POSTGRES_PASSWORD             | SQL Instance postgres pasword 	|
 | PROJECTNUM                 	| Porject Number of current PROJECT_ID        	|
-| CLOUDBUILD                 	| Cloud Build service account        	|
+| POSTGRES_USER                 	| Cloud Build service account        	|
 | CLOUDRUN                     	| Cloud Run service account        	|
 
 ## API's  
@@ -175,7 +179,7 @@ following environment variables have been initialized:
  2. REGION
  3. SQL_INSTANCE_ID
  4. REGION
- 5. PASSWORD
+ 
 Now we will add configurations. 
 As before you can simply run `source ./secret.sh`  
 or run following commands:  
@@ -214,8 +218,6 @@ gcloud secrets add-iam-policy-binding $APPLICATION_SECRET_NAME \
 gcloud secrets add-iam-policy-binding $APPLICATION_SECRET_NAME \
   --member serviceAccount:${CLOUDBUILD} --role roles/secretmanager.secretAccessor
 ```
-Allow cloudbuild to access PASSWORD_SECRET_NAME secret.  
-For __*PASSWORD_SECRET_NAME*__ refer to resources table.  
 
 Allow cloud build role of cloudsql.client  and run.admin
 ```
