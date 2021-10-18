@@ -1,0 +1,14 @@
+steps:
+# Pull the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['pull', 'redis']
+# tag the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'redis', 'gcr.io/$PROJECT_ID/redis']  
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/redis']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['run', 'deploy', 'redis-private', '--image', 'gcr.io/$PROJECT_ID/redis', '--region', 'us-central1', '--platform', 'managed', '--allow-unauthenticated', '--ingress', 'internal', '--port', '6379']
+images:
+- gcr.io/$PROJECT_ID/redis

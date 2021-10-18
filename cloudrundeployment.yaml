@@ -1,0 +1,25 @@
+steps:
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_IMAGE_NAME}", "."]
+- name: "gcr.io/cloud-builders/docker"
+  args: ["push", "gcr.io/${PROJECT_ID}/${_IMAGE_NAME}"]
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - 'run'
+  - 'deploy'
+  - '${_SERVICE_NAME}'
+  - '--image'
+  - 'gcr.io/$PROJECT_ID/${_IMAGE_NAME}'
+  - '--region'
+  - '${_REGION}'
+  - '--platform'
+  - 'managed'
+  - '--add-cloudsql-instances'
+  - '${PROJECT_ID}:${_REGION}:${_SQL_INSTANCE_ID}'
+  - '--allow-unauthenticated'
+  - '--port'
+  - '${_PORT}'
+  - '--vpc-connector'
+  - '${_MY_VPC_CONNECTOR}'
+images:
+- gcr.io/$PROJECT_ID/my-app
