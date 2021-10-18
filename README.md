@@ -133,36 +133,38 @@ Alternatively you can run following commands:
 Create sql postgres instance:
 For __*SQL_INSTANCE_NAME*__ refer to table for variables on top.
 
-```
+
 #Password for DB Instance
+```
 DBPASS="$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 30 | head -n 1)"
 
 ```
 #create vpc-peering for private network
-
+```
 gcloud compute addresses create google-managed-services-default \
 --global \
 --purpose=VPC_PEERING \
 --prefix-length=16 \
 --network=default
 
+```
 gcloud services vpc-peerings connect \
 --service=servicenetworking.googleapis.com \
 --ranges=google-managed-services-default \
 --network=default \
 --project=$PROJECT_ID
 
-```
+
 # create sql postgers instance
-PROJECT_ID=wproject-id
+```
+PROJECT_ID=project-id
 REGION=us-central1
 SQL_INSTANCE_ID=myinstance
 gcloud beta sql instances create myinstance --no-assign-ip --project $PROJECT_ID \
 --network=default --root-password=$DBPASS  --database-version  POSTGRES_13  --tier db-f1-micro --region $REGION
 
-```
 #env var for DB
-
+```
 echo DB_HOST=$( gcloud sql instances describe $SQL_INSTANCE_ID |grep ipAddress: | awk '{print $NF}') >>.env
 echo DB_NAME=postgres >>.env
 echo DB_USER=postgre>>.env
@@ -196,7 +198,7 @@ Go to myproject -> settings.py and on line 18 assign SETTINGS_NAME variable APPL
 gcloud secrets create APPLICATION_SECRET_NAME --data-file .env
 gcloud secrets versions list APPLICATION_SECRET_NAME
 rm .env 
-```
+
 
 
 ## 6. Create IAM Roles Bindings  
@@ -208,7 +210,7 @@ Intialize CLOUD_BUILD and CLOUD_RUN variables with the service account.
 PROJECTNUM=$(gcloud projects describe ${PROJECT_ID} --format 'value(projectNumber)')
 CLOUDRUN=${PROJECTNUM}-compute@developer.gserviceaccount.com
 CLOUDBUILD=${PROJECTNUM}@cloudbuild.gserviceaccount.com
-```
+
 
 Allow cloudbuild and cloudrun to access __*APPLICATION_SECRET_NAME*__ secret.  
 For __*APPLICATION_SECRET_NAME*__ refer to resources table.   
@@ -243,11 +245,10 @@ Submit build to create and push container image and run migrations using cloudmi
 For __*SERVICE_NAME*__ and __*IMAGE_NAME*__ refer to resources table.    
 ```
 gcloud builds submit --config cloud-run-redis.yaml
-```
+
 Update URL for redis in app/app/settings.py
 ```
 private_redis=$(gcloud run services describe redis-private --platform managed --region  $REGION |grep URL |awk '{print $NF}')
-```
 sed -i "s|REDIS_URL|"$private_redis"|g" "app/app/settings.py"
 
 ## 7. Deploye redis service on cloud run using Cloud Build 
@@ -255,7 +256,7 @@ sed -i "s|REDIS_URL|"$private_redis"|g" "app/app/settings.py"
 Now build & deploy django app to cloud run.
 ```
 gcloud builds submit --config cloudrun_deployment.yaml --substitutions _REGION=$REGION,_SQL_INSTANCE_ID=my-instance,_SERVICE_NAME=my-app,_IMAGE_NAME=my-app,_MY_VPC_CONNECTOR=my-vpc-connextor,_PORT=8000
-```
+
 
 The successfull build will return url of the service in response.
 
