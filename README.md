@@ -162,6 +162,7 @@ gcloud beta sql instances create myinstance --no-assign-ip --project $PROJECT_ID
 
 ```
 #env var for DB
+
 echo DB_HOST=$( gcloud sql instances describe $SQL_INSTANCE_ID |grep ipAddress: | awk '{print $NF}') >>.env
 echo DB_NAME=postgres >>.env
 echo DB_USER=postgre>>.env
