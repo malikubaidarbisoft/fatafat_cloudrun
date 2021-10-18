@@ -138,7 +138,7 @@ For __*SQL_INSTANCE_NAME*__ refer to table for variables on top.
 ```
 DBPASS="$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 30 | head -n 1)"
 
-```
+
 #create vpc-peering for private network
 ```
 gcloud compute addresses create google-managed-services-default \
@@ -146,6 +146,7 @@ gcloud compute addresses create google-managed-services-default \
 --purpose=VPC_PEERING \
 --prefix-length=16 \
 --network=default
+
 ```
 gcloud services vpc-peerings connect \
 --service=servicenetworking.googleapis.com \
