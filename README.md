@@ -116,7 +116,7 @@ gcloud services enable \
   compute.googleapis.com \
   cloudbuild.googleapis.com \
   secretmanager.googleapis.com
-```
+
 
 
 
@@ -140,6 +140,7 @@ DBPASS="$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 30 | head -n 
 
 
 #create vpc-peering for private network
+
 ```
 gcloud compute addresses create google-managed-services-default \
 --global \
