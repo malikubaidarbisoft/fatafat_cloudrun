@@ -4,7 +4,7 @@ Overview:
 
     1. We will create (or/and configure) project and region to use.   
     2. We will enable API's required (refer to table in Resources) for deployment.   
-    3. We will create an sql instance, database and user.  
+    3. We will create an private sql instance.  
     4. We will create secrets using secret manager.
     5. We will configure iam binidings.  
     6. We will use cloud build to run redis and deploy django app to cloud run.
@@ -116,7 +116,7 @@ gcloud services enable \
 
 
 
-## 3. Create SQL Instance, Database and User  
+## 3. Create Private SQL Instance  
 
 You can execute create_database.sh using `source ./create_database.sh`  
 1) This script will create Network peering for private network
